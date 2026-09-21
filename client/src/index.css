@@ -1,0 +1,33 @@
+
+:root {
+  font-family: 'Inter', sans-serif;
+  color: #20243a;
+  background: #f6f7fb;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  background: #f6f7fb;
+}
+
+button,
+input {
+  font: inherit;
+}

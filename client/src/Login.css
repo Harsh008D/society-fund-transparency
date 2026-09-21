@@ -1,0 +1,220 @@
+
+/* Page layout */
+.login-page {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    background: #f5f6fc;
+  }
+  
+  /* Login card */
+  .login-card {
+    width: 100%;
+    max-width: 440px;
+    padding: 40px;
+    background: #ffffff;
+    border: 1px solid #e7e8f0;
+    border-radius: 20px;
+    box-shadow: 0 15px 45px rgba(30, 35, 70, 0.07);
+  }
+  
+  /* Brand section */
+  .login-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  
+  .login-logo {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    border-radius: 15px;
+    background: #6658e8;
+    color: #ffffff;
+    font-size: 26px;
+    font-weight: 800;
+  }
+  
+  .login-brand h1 {
+    margin: 0;
+    color: #20243a;
+    font-size: 25px;
+    font-weight: 750;
+    letter-spacing: -0.8px;
+  }
+  
+  .login-brand h1 span {
+    color: #6658e8;
+  }
+  
+  .login-brand > p {
+    margin: 8px 0 0;
+    color: #9298ad;
+    font-size: 10px;
+    letter-spacing: 2px;
+  }
+  
+  /* Welcome section */
+  .login-card h2 {
+    margin: 0 0 10px;
+    color: #20243a;
+    font-size: 27px;
+    font-weight: 750;
+    text-align: center;
+    letter-spacing: -0.7px;
+  }
+  
+  .login-subtitle {
+    margin: 0 0 30px;
+    color: #737b91;
+    font-size: 14px;
+    line-height: 1.6;
+    text-align: center;
+  }
+  
+  /* Form */
+  .login-card form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .login-card label {
+    margin-bottom: 9px;
+    color: #343b52;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+  }
+  
+  .login-card input {
+    width: 100%;
+    height: 48px;
+    margin-bottom: 22px;
+    padding: 0 14px;
+    border: 1px solid #dfe2ed;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #20243a;
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  
+  .login-card input::placeholder {
+    color: #a0a6b8;
+  }
+  
+  .login-card input:focus {
+    border-color: #6658e8;
+    box-shadow: 0 0 0 3px rgba(102, 88, 232, 0.12);
+  }
+  
+  /* Sign in button */
+  .login-card form button {
+    width: 100%;
+    height: 49px;
+    margin-top: 3px;
+    border: none;
+    border-radius: 10px;
+    background: #6658e8;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+  }
+  
+  .login-card form button:hover {
+    background: #5546d4;
+    transform: translateY(-1px);
+  }
+  
+  .login-card form button:disabled {
+    opacity: 0.65;
+    cursor: wait;
+    transform: none;
+  }
+  
+  /* Error message */
+  .login-error {
+    margin: -8px 0 16px;
+    color: #dc3545;
+    font-size: 13px;
+    text-align: center;
+  }
+  
+  /* Footer */
+  .login-footer {
+    margin: 27px 0 0;
+    color: #858ca1;
+    font-size: 12px;
+    text-align: center;
+  }
+  
+  /* Mobile layout */
+  @media (max-width: 480px) {
+    .login-page {
+      padding: 18px;
+    }
+  
+    .login-card {
+      padding: 32px 24px;
+      border-radius: 16px;
+    }
+  
+    .login-brand {
+      margin-bottom: 30px;
+    }
+  
+    .login-card h2 {
+      font-size: 24px;
+    }
+  }
+
+.society-register-btn {
+  width: 100%;
+  padding: 13px 16px;
+  margin-top: 12px;
+
+  background: #ffffff;
+  color: #6254e8;
+
+  border: 1px solid #dcd8ff;
+  border-radius: 10px;
+
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.society-register-btn span {
+  font-size: 18px;
+  margin-right: 6px;
+  vertical-align: -1px;
+}
+
+.society-register-btn:hover {
+  background: #f5f3ff;
+  border-color: #6254e8;
+  transform: translateY(-1px);
+}
+
+.society-register-btn:focus-visible {
+  outline: 3px solid #c4baff;
+  outline-offset: 2px;
+}

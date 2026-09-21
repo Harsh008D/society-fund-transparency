@@ -1,0 +1,99 @@
+
+.society-register-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    background: #f4f5fb;
+  }
+  
+  .society-register-card {
+    width: 100%;
+    max-width: 500px;
+    padding: 36px;
+    background: #fff;
+    border: 1px solid #e5e7f0;
+    border-radius: 18px;
+    box-shadow: 0 12px 40px rgba(30, 35, 80, 0.08);
+  }
+  
+  .society-register-card h1 {
+    margin: 0 0 10px;
+    color: #252943;
+    font-size: 28px;
+  }
+  
+  .society-register-card > p {
+    margin-bottom: 28px;
+    color: #777d96;
+    line-height: 1.5;
+  }
+  
+  .society-register-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .society-register-card label {
+    margin-top: 8px;
+    color: #353a55;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  
+  .society-register-card input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 14px;
+    border: 1px solid #dfe2ef;
+    border-radius: 9px;
+    background: #fff;
+    color: #252943;
+    font-size: 15px;
+    outline: none;
+  }
+  
+  .society-register-card input:focus {
+    border-color: #6554e8;
+    box-shadow: 0 0 0 3px rgba(101, 84, 232, 0.12);
+  }
+  
+  .society-register-card form button {
+    margin-top: 14px;
+    padding: 14px;
+    border: none;
+    border-radius: 9px;
+    background: #6554e8;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  .society-register-card form button:disabled {
+    opacity: 0.65;
+    cursor: wait;
+  }
+  
+  .back-login-button {
+    display: block;
+    margin: 20px auto 0;
+    padding: 8px;
+    border: none;
+    background: transparent;
+    color: #6554e8;
+    cursor: pointer;
+  }
+  
+  .society-register-error {
+    color: #c62828;
+    font-size: 14px;
+  }
+  
+  @media (max-width: 500px) {
+    .society-register-card {
+      padding: 24px;
+    }
+  }
