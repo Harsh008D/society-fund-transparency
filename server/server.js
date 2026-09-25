@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 require("dotenv").config();
-const authRoutes = require("./routes/authroutes");
+const authRoutes = require("./routes/authRoutes");
 const societyRoutes = require("./routes/societyRoutes");
 const fundRoutes = require("./routes/fundRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
@@ -41,7 +41,7 @@ mongoose
   });
 
 // Start server
-const PORT = 5050;
+const PORT = process.env.PORT || 5050;
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
