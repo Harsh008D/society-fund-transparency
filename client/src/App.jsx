@@ -109,7 +109,7 @@ function App() {
 
       try {
         const response = await fetch(
-          'http://localhost:5050/api/auth/profile',
+          'https://society-fund-transparency.onrender.com/api/auth/profile',
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -143,7 +143,7 @@ function App() {
     setFundSubmitting(true);
 
     try {
-      const response = await fetch('http://localhost:5050/api/funds', {
+      const response = await fetch('https://society-fund-transparency.onrender.com/api/funds', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -208,7 +208,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `http://localhost:5050/api/funds/${editingFundId}`,
+        `https://society-fund-transparency.onrender.com/api/funds/${editingFundId}`,
         {
           method: "PUT",
           headers: {
@@ -247,7 +247,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `http://localhost:5050/api/funds/${fundId}`,
+        `https://society-fund-transparency.onrender.com/api/funds/${fundId}`,
         {
           method: "DELETE",
           headers: {
@@ -286,10 +286,10 @@ function App() {
         }
 
         const [fundsResponse, expensesResponse] = await Promise.all([
-          fetch(`http://localhost:5050/api/funds/${societyId}`, {
+          fetch(`https://society-fund-transparency.onrender.com/api/funds/${societyId}`, {
             headers,
           }),
-          fetch(`http://localhost:5050/api/expenses/${societyId}`, {
+          fetch(`https://society-fund-transparency.onrender.com/api/expenses/${societyId}`, {
             headers,
           }),
         ])
@@ -421,7 +421,7 @@ function App() {
     e.preventDefault()
 
     try {
-      const response = await fetch('http://localhost:5050/api/expenses', {
+      const response = await fetch('https://society-fund-transparency.onrender.com/api/expenses', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -465,7 +465,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `http://localhost:5050/api/expenses/${editingExpenseId}`,
+        `https://society-fund-transparency.onrender.com/api/expenses/${editingExpenseId}`,
         {
           method: 'PUT',
           headers: {
@@ -512,7 +512,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `http://localhost:5050/api/expenses/${expenseId}`,
+        `https://society-fund-transparency.onrender.com/api/expenses/${expenseId}`,
         {
           method: 'DELETE',
           headers: {
@@ -544,7 +544,7 @@ function App() {
 
     try {
       const response = await fetch(
-        'http://localhost:5050/api/invitations',
+        'https://society-fund-transparency.onrender.com/api/invitations',
         {
           method: 'POST',
           headers: {

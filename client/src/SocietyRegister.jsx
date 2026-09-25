@@ -28,7 +28,7 @@ function SocietyRegister({ onRegister, onBackToLogin }) {
 
     try {
       const response = await fetch(
-        "http://localhost:5050/api/society/register",
+        "https://society-fund-transparency.onrender.com/api/society/register",
         {
           method: "POST",
           headers: {
