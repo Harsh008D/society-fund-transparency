@@ -1,4 +1,4 @@
-const Society = require("../models/Society");
+const Society = require("../models/society");
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
