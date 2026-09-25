@@ -2,7 +2,7 @@ const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Invitation = require("../models/Invitation");
-const Society = require("../models/Society");
+const Society = require("../models/society");
 
 // Register resident using invitation code
 const registerUser = async (req, res) => {
