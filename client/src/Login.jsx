@@ -8,6 +8,16 @@ function Login({ onLogin, onSignupClick, onSocietyRegisterClick }) {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
+  const [theme, setTheme] = useState(
+    () => localStorage.getItem('loginTheme') || 'dark'
+  )
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark'
+    setTheme(newTheme)
+    localStorage.setItem('loginTheme', newTheme)
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
@@ -28,7 +38,6 @@ function Login({ onLogin, onSignupClick, onSocietyRegisterClick }) {
       const data = await response.json()
 
       if (!response.ok) {
-        console.log('Login API error:', response.status, data)
         throw new Error(
           data.message || data.error || `Login failed (${response.status})`
         )
@@ -47,7 +56,18 @@ function Login({ onLogin, onSignupClick, onSocietyRegisterClick }) {
   }
 
   return (
-    <div className="login-page">
+    <div className="login-page" data-theme={theme}>
+
+      <button
+        type="button"
+        className="login-theme-toggle"
+        onClick={toggleTheme}
+        aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+        title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+      >
+        {theme === 'dark' ? '☀️' : '🌙'}
+      </button>
+
       <div className="login-card">
         <div className="login-brand">
           <div className="login-logo">S</div>
