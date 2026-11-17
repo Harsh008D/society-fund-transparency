@@ -1,12 +1,10 @@
-
 const Expense = require("../models/expense");
 const User = require("../models/user");
 
 // Create an expense (admin only)
 const createExpense = async (req, res) => {
   try {
-    const { title, amount, category, description, date, receiptUrl } =
-      req.body;
+    const { title, amount, category, description, date, receiptUrl } = req.body;
 
     const user = await User.findById(req.user.userId);
 
@@ -40,9 +38,7 @@ const createExpense = async (req, res) => {
       expense,
     });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -57,9 +53,16 @@ const getExpenses = async (req, res) => {
       });
     }
 
-    const expenses = await Expense.find({
+    const query = {
       society: user.society,
-    })
+    };
+
+    // Residents can only see approved expenses
+    if (user.role === "resident") {
+      query.status = "Approved";
+    }
+
+    const expenses = await Expense.find(query)
       .populate("recordedBy", "name email")
       .populate("approvedBy", "name email")
       .populate("approvalHistory.performedBy", "name email")
@@ -67,13 +70,11 @@ const getExpenses = async (req, res) => {
 
     res.status(200).json(expenses);
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.status(500).json({ message: error.message });
   }
 };
 
-// Update an expense (admin only, pending expenses only)
+// Update an expense (admin only)
 const updateExpense = async (req, res) => {
   try {
     const user = await User.findById(req.user.userId);
@@ -84,14 +85,7 @@ const updateExpense = async (req, res) => {
       });
     }
 
-    const {
-      title,
-      amount,
-      category,
-      description,
-      date,
-      receiptUrl,
-    } = req.body;
+    const { title, amount, category, description, date, receiptUrl } = req.body;
 
     const updates = {};
 
@@ -113,23 +107,40 @@ const updateExpense = async (req, res) => {
       });
     }
 
-    if (expense.status !== "Pending") {
+    if (!["Pending", "Changes Requested"].includes(expense.status)) {
       return res.status(400).json({
-        message: "Only pending expenses can be edited",
+        message: "Only pending or correction-requested expenses can be edited",
       });
     }
 
+    const wasChangesRequested = expense.status === "Changes Requested";
+
     Object.assign(expense, updates);
+
+    // Resubmit after making requested corrections
+    if (wasChangesRequested) {
+      expense.status = "Pending";
+      expense.approvedBy = null;
+      expense.reviewedAt = null;
+      expense.rejectionReason = "";
+
+      expense.approvalHistory.push({
+        action: "Resubmitted",
+        performedBy: user._id,
+        comment: "Updated request and resubmitted for review",
+      });
+    }
+
     await expense.save();
 
     res.status(200).json({
-      message: "Expense updated successfully",
+      message: wasChangesRequested
+        ? "Expense updated and resubmitted for approval"
+        : "Expense updated successfully",
       expense,
     });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -144,25 +155,30 @@ const deleteExpense = async (req, res) => {
       });
     }
 
-    const expense = await Expense.findOneAndDelete({
+    const expense = await Expense.findOne({
       _id: req.params.id,
       society: user.society,
-      status: "Pending",
     });
 
     if (!expense) {
       return res.status(404).json({
-        message: "Pending expense not found",
+        message: "Expense not found",
       });
     }
+
+    if (!["Pending", "Changes Requested"].includes(expense.status)) {
+      return res.status(400).json({
+        message: "Only pending or correction-requested expenses can be deleted",
+      });
+    }
+
+    await expense.deleteOne();
 
     res.status(200).json({
       message: "Expense deleted successfully",
     });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -190,7 +206,7 @@ const approveExpense = async (req, res) => {
 
     if (expense.status !== "Pending") {
       return res.status(400).json({
-        message: "This expense has already been reviewed",
+        message: "This expense is not awaiting approval",
       });
     }
 
@@ -212,9 +228,7 @@ const approveExpense = async (req, res) => {
       expense,
     });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -250,7 +264,7 @@ const rejectExpense = async (req, res) => {
 
     if (expense.status !== "Pending") {
       return res.status(400).json({
-        message: "This expense has already been reviewed",
+        message: "This expense is not awaiting approval",
       });
     }
 
@@ -272,9 +286,64 @@ const rejectExpense = async (req, res) => {
       expense,
     });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Request changes to an expense (committee only)
+const requestChanges = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId);
+
+    if (!user || !user.society) {
+      return res.status(404).json({
+        message: "User or society not found",
+      });
+    }
+
+    const { comment } = req.body;
+
+    if (!comment || !comment.trim()) {
+      return res.status(400).json({
+        message: "Please provide details about the required changes",
+      });
+    }
+
+    const expense = await Expense.findOne({
+      _id: req.params.id,
+      society: user.society,
     });
+
+    if (!expense) {
+      return res.status(404).json({
+        message: "Expense not found",
+      });
+    }
+
+    if (expense.status !== "Pending") {
+      return res.status(400).json({
+        message: "This expense is not awaiting review",
+      });
+    }
+
+    expense.status = "Changes Requested";
+    expense.reviewedAt = new Date();
+    expense.rejectionReason = "";
+
+    expense.approvalHistory.push({
+      action: "Changes Requested",
+      performedBy: user._id,
+      comment: comment.trim(),
+    });
+
+    await expense.save();
+
+    res.status(200).json({
+      message: "Changes requested successfully",
+      expense,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -285,4 +354,5 @@ module.exports = {
   deleteExpense,
   approveExpense,
   rejectExpense,
+  requestChanges,
 };

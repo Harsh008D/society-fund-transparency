@@ -52,7 +52,7 @@ const expenseSchema = new mongoose.Schema(
     // Expense approval fields
     status: {
       type: String,
-      enum: ["Pending", "Approved", "Rejected"],
+      enum: ["Pending", "Changes Requested", "Approved", "Rejected"],
       default: "Pending",
     },
     approvedBy: {
@@ -73,7 +73,13 @@ const expenseSchema = new mongoose.Schema(
       {
         action: {
           type: String,
-          enum: ["Submitted", "Approved", "Rejected"],
+          enum: [
+            "Submitted",
+            "Changes Requested",
+            "Resubmitted",
+            "Approved",
+            "Rejected",
+          ],
         },
         performedBy: {
           type: mongoose.Schema.Types.ObjectId,

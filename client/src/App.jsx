@@ -296,12 +296,9 @@ function App() {
               headers,
             }
           ),
-          fetch(
-            "https://society-fund-transparency.onrender.com/api/expenses",
-            {
-              headers,
-            }
-          ),
+          fetch("https://society-fund-transparency.onrender.com/api/expenses", {
+            headers,
+          }),
         ]);
 
         const fundsData = await fundsResponse.json();
@@ -485,7 +482,7 @@ function App() {
       activityName: fund.name,
       activityAmount: Number(fund.amount || 0),
     })),
-    ...expenses.map((expense) => ({
+    ...approvedExpenses.map((expense) => ({
       ...expense,
       activityType: "Expense",
       activityName: expense.title,
@@ -612,17 +609,24 @@ function App() {
 
     let reason = "";
 
-    if (action === "reject") {
-      const input = window.prompt(
-        "Enter the reason for rejecting this expense:"
-      );
+    if (action === "reject" || action === "request-changes") {
+      const promptMessage =
+        action === "reject"
+          ? "Enter the reason for rejecting this expense:"
+          : "Explain what changes the admin needs to make:";
+
+      const input = window.prompt(promptMessage);
 
       if (input === null) return;
 
       reason = input.trim();
 
       if (!reason) {
-        setApprovalError("A rejection reason is required.");
+        setApprovalError(
+          action === "reject"
+            ? "A rejection reason is required."
+            : "Please explain the required changes."
+        );
         return;
       }
     } else {
@@ -649,6 +653,8 @@ function App() {
           body: JSON.stringify(
             action === "reject"
               ? { reason }
+              : action === "request-changes"
+              ? { comment: reason }
               : { comment: "Approved by committee member" }
           ),
         }
@@ -669,7 +675,9 @@ function App() {
       setApprovalMessage(
         action === "approve"
           ? "Expense approved successfully."
-          : "Expense rejected successfully."
+          : action === "reject"
+          ? "Expense rejected successfully."
+          : "Changes requested successfully."
       );
     } catch (error) {
       setApprovalError(error.message);
@@ -1199,7 +1207,28 @@ function App() {
               {/* Left side: expense information */}
               <div className="activity-details">
                 <strong>{expense.title || expense.name}</strong>
-                <p>{expense.description}</p>
+                <p>Category: {expense.category}</p>
+                <p>{expense.description || "No description provided"}</p>
+
+                <p>
+                  Status: <strong>{expense.status || "Pending"}</strong>
+                </p>
+
+                {expense.status === "Changes Requested" && (
+                  <div>
+                    <strong>Committee feedback:</strong>
+                    {expense.approvalHistory
+                      ?.filter((item) => item.action === "Changes Requested")
+                      .slice(-1)
+                      .map((item, index) => (
+                        <p key={index}>{item.comment}</p>
+                      ))}
+                  </div>
+                )}
+
+                {expense.status === "Rejected" && expense.rejectionReason && (
+                  <p>Rejection reason: {expense.rejectionReason}</p>
+                )}
               </div>
 
               {/* Right side: amount, date, and buttons */}
@@ -1215,23 +1244,24 @@ function App() {
                   </p>
                 </div>
 
-                {currentUser?.role === "admin" && (
-                  <div className="expense-actions">
-                    <button
-                      type="button"
-                      onClick={() => startEditExpense(expense)}
-                    >
-                      Edit
-                    </button>
+                {currentUser?.role === "admin" &&
+                  ["Pending", "Changes Requested"].includes(expense.status) && (
+                    <div className="expense-actions">
+                      <button
+                        type="button"
+                        onClick={() => startEditExpense(expense)}
+                      >
+                        Edit
+                      </button>
 
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteExpense(expense._id)}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                )}
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteExpense(expense._id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
               </div>
 
               {/* Edit form appears separately, like Funds */}
@@ -1622,7 +1652,11 @@ function App() {
 
                   <div className="activity-details">
                     <strong>{expense.title}</strong>
-                    <p>{expense.description || expense.category}</p>
+                    <p>Category: {expense.category}</p>
+                    <p>
+                      Description:{" "}
+                      {expense.description || "No description provided"}
+                    </p>
                     <p>Submitted by: {expense.recordedBy?.name || "Admin"}</p>
                   </div>
 
@@ -1656,6 +1690,16 @@ function App() {
                         }
                       >
                         Reject
+                      </button>
+
+                      <button
+                        type="button"
+                        disabled={reviewingExpenseId === expense._id}
+                        onClick={() =>
+                          handleReviewExpense(expense._id, "request-changes")
+                        }
+                      >
+                        Request Changes
                       </button>
                     </div>
                   </div>

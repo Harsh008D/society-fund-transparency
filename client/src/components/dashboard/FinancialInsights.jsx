@@ -1,10 +1,4 @@
-import {
-  Cell,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-} from "recharts";
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import "../../styles/financial-insights.css";
 
 const CATEGORY_COLORS = [
@@ -19,7 +13,10 @@ const CATEGORY_COLORS = [
 ];
 
 function getMonthKey(date) {
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+    2,
+    "0"
+  )}`;
 }
 
 function sumForMonth(records, monthKey) {
@@ -40,6 +37,10 @@ function formatPercentChange(current, previous) {
 }
 
 function FinancialInsights({ funds, expenses, formatCurrency }) {
+  const approvedExpenses = expenses.filter(
+    (expense) => expense.status === "Approved"
+  );
+  
   const now = new Date();
   const currentMonthKey = getMonthKey(now);
   const previousMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
@@ -60,7 +61,8 @@ function FinancialInsights({ funds, expenses, formatCurrency }) {
   });
 
   const categoryTotals = expenses.reduce((totals, expense) => {
-    const category = String(expense.category || "Uncategorized").trim() || "Uncategorized";
+    const category =
+      String(expense.category || "Uncategorized").trim() || "Uncategorized";
     totals[category] = (totals[category] || 0) + Number(expense.amount || 0);
     return totals;
   }, {});
@@ -69,19 +71,28 @@ function FinancialInsights({ funds, expenses, formatCurrency }) {
     .map(([name, value]) => ({ name, value }))
     .sort((a, b) => b.value - a.value);
 
-  const totalFunds = funds.reduce((sum, item) => sum + Number(item.amount || 0), 0);
-  const totalExpenses = expenses.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+  const totalFunds = funds.reduce(
+    (sum, item) => sum + Number(item.amount || 0),
+    0
+  );
+  const totalExpenses = expenses.reduce(
+    (sum, item) => sum + Number(item.amount || 0),
+    0
+  );
   const balance = totalFunds - totalExpenses;
-  const expenseRatio = totalFunds > 0 ? (totalExpenses / totalFunds) * 100 : null;
+  const expenseRatio =
+    totalFunds > 0 ? (totalExpenses / totalFunds) * 100 : null;
 
   let healthLabel = "Insufficient data";
-  let healthDescription = "Record funds to calculate your society's financial health.";
+  let healthDescription =
+    "Record funds to calculate your society's financial health.";
   let healthTone = "neutral";
 
   if (totalFunds > 0) {
     if (balance < 0 || expenseRatio > 90) {
       healthLabel = "Needs attention";
-      healthDescription = "Expenses are very high compared with recorded funds.";
+      healthDescription =
+        "Expenses are very high compared with recorded funds.";
       healthTone = "danger";
     } else if (expenseRatio >= 70) {
       healthLabel = "Watch closely";
@@ -89,7 +100,8 @@ function FinancialInsights({ funds, expenses, formatCurrency }) {
       healthTone = "warning";
     } else {
       healthLabel = "Healthy balance";
-      healthDescription = "Recorded expenses are within a moderate share of funds.";
+      healthDescription =
+        "Recorded expenses are within a moderate share of funds.";
       healthTone = "good";
     }
   }
@@ -112,12 +124,17 @@ function FinancialInsights({ funds, expenses, formatCurrency }) {
   ];
 
   return (
-    <section className="financial-insights-grid" aria-label="Financial insights">
+    <section
+      className="financial-insights-grid"
+      aria-label="Financial insights"
+    >
       <article className="content-card insight-card monthly-comparison-card">
         <div className="insight-heading">
           <div>
             <h2>Monthly comparison</h2>
-            <p>{currentMonthLabel} compared with {previousMonthLabel}</p>
+            <p>
+              {currentMonthLabel} compared with {previousMonthLabel}
+            </p>
           </div>
           <span className="insight-period">Month to date</span>
         </div>
@@ -143,7 +160,9 @@ function FinancialInsights({ funds, expenses, formatCurrency }) {
             </div>
           ))}
         </div>
-        <p className="insight-footnote">The comparison uses calendar-month dates from your saved records.</p>
+        <p className="insight-footnote">
+          The comparison uses calendar-month dates from your saved records.
+        </p>
       </article>
 
       <article className="content-card insight-card expense-breakdown-card">
@@ -169,7 +188,10 @@ function FinancialInsights({ funds, expenses, formatCurrency }) {
                     stroke="none"
                   >
                     {categoryData.map((entry, index) => (
-                      <Cell key={entry.name} fill={CATEGORY_COLORS[index % CATEGORY_COLORS.length]} />
+                      <Cell
+                        key={entry.name}
+                        fill={CATEGORY_COLORS[index % CATEGORY_COLORS.length]}
+                      />
                     ))}
                   </Pie>
                   <Tooltip
@@ -191,12 +213,16 @@ function FinancialInsights({ funds, expenses, formatCurrency }) {
 
             <div className="expense-category-list">
               {categoryData.map((item, index) => {
-                const share = totalExpenses > 0 ? (item.value / totalExpenses) * 100 : 0;
+                const share =
+                  totalExpenses > 0 ? (item.value / totalExpenses) * 100 : 0;
                 return (
                   <div className="expense-category-row" key={item.name}>
                     <span
                       className="category-color-dot"
-                      style={{ backgroundColor: CATEGORY_COLORS[index % CATEGORY_COLORS.length] }}
+                      style={{
+                        backgroundColor:
+                          CATEGORY_COLORS[index % CATEGORY_COLORS.length],
+                      }}
                     />
                     <span className="expense-category-name">{item.name}</span>
                     <strong>{share.toFixed(1)}%</strong>
@@ -208,7 +234,9 @@ function FinancialInsights({ funds, expenses, formatCurrency }) {
         ) : (
           <div className="insight-empty-state">
             <strong>No expense categories yet</strong>
-            <span>Category totals will appear after expenses are recorded.</span>
+            <span>
+              Category totals will appear after expenses are recorded.
+            </span>
           </div>
         )}
       </article>
@@ -228,12 +256,18 @@ function FinancialInsights({ funds, expenses, formatCurrency }) {
 
         <div className="health-balance-block">
           <span>Available balance</span>
-          <strong className={balance < 0 ? "negative-balance" : ""}>{formatCurrency(balance)}</strong>
+          <strong className={balance < 0 ? "negative-balance" : ""}>
+            {formatCurrency(balance)}
+          </strong>
         </div>
 
         <div className="health-ratio-heading">
           <span>Funds spent</span>
-          <strong>{expenseRatio === null ? "Not available" : `${expenseRatio.toFixed(1)}%`}</strong>
+          <strong>
+            {expenseRatio === null
+              ? "Not available"
+              : `${expenseRatio.toFixed(1)}%`}
+          </strong>
         </div>
         <div className="health-progress-track">
           <div
@@ -242,7 +276,9 @@ function FinancialInsights({ funds, expenses, formatCurrency }) {
           />
         </div>
         <p className="health-description">{healthDescription}</p>
-        <p className="insight-footnote">This is a simple indicator, not an accounting or audit assessment.</p>
+        <p className="insight-footnote">
+          This is a simple indicator, not an accounting or audit assessment.
+        </p>
       </article>
     </section>
   );
