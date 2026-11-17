@@ -11,6 +11,7 @@ const fundRoutes = require("./routes/fundRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
 const invitationRoutes = require('./routes/invitationRoutes')
 const societyRegistrationRoutes = require("./routes/societyRegistrationRoutes");
+const budgetRoutes = require("./routes/budgetRoutes");
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use("/api/funds", fundRoutes);
 app.use("/api/expenses", expenseRoutes);
 app.use('/api/invitations', invitationRoutes)
 app.use("/api/society", societyRegistrationRoutes);
+app.use("/api/budgets", budgetRoutes);
 
 // Test route
 app.get("/", (req, res) => {

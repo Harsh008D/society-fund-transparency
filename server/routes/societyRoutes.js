@@ -1,3 +1,4 @@
+
 const express = require("express");
 const router = express.Router();
 
@@ -11,9 +12,11 @@ const {
 
 const {
   createCommitteeMember,
+  getCommitteeMembers,
+  deleteCommitteeMember,
 } = require("../controllers/committeeController");
 
-// Create society (admin only)
+// Create society
 router.post(
   "/",
   protect,
@@ -24,12 +27,28 @@ router.post(
 // Get societies
 router.get("/", protect, getSocieties);
 
-// Create committee member (admin only)
+// Create committee member
 router.post(
   "/committee",
   protect,
   authorizeRoles("admin"),
   createCommitteeMember
+);
+
+// Get committee members
+router.get(
+  "/committee",
+  protect,
+  authorizeRoles("admin"),
+  getCommitteeMembers
+);
+
+// Delete committee member
+router.delete(
+  "/committee/:id",
+  protect,
+  authorizeRoles("admin"),
+  deleteCommitteeMember
 );
 
 module.exports = router;

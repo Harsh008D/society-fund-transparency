@@ -1,3 +1,4 @@
+
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 
@@ -65,10 +66,67 @@ const createCommitteeMember = async (req, res) => {
       });
     }
 
-    res.status(500).json({
-      message: error.message,
-    });
+    res.status(500).json({ message: error.message });
   }
 };
 
-module.exports = { createCommitteeMember };
+// Admin gets all committee members in their society
+const getCommitteeMembers = async (req, res) => {
+  try {
+    const admin = await User.findById(req.user.userId);
+
+    if (!admin || !admin.society) {
+      return res.status(404).json({
+        message: "Admin or society not found",
+      });
+    }
+
+    const members = await User.find({
+      society: admin.society,
+      role: "committee",
+    })
+      .select("-password")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({ members });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Admin removes a committee member from their society
+const deleteCommitteeMember = async (req, res) => {
+  try {
+    const admin = await User.findById(req.user.userId);
+
+    if (!admin || !admin.society) {
+      return res.status(404).json({
+        message: "Admin or society not found",
+      });
+    }
+
+    const member = await User.findOneAndDelete({
+      _id: req.params.id,
+      society: admin.society,
+      role: "committee",
+    });
+
+    if (!member) {
+      return res.status(404).json({
+        message: "Committee member not found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Committee member removed successfully",
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = {
+  createCommitteeMember,
+  getCommitteeMembers,
+  deleteCommitteeMember,
+};

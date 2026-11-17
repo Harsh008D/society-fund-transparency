@@ -8,6 +8,7 @@ import "./styles/dashboard.css";
 import FinancialOverview from "./components/dashboard/FinancialOverview";
 import RecentActivity from "./components/dashboard/RecentActivity";
 import FinancialInsights from "./components/dashboard/FinancialInsights";
+import BudgetPage from "./components/budget/BudgetPage";
 
 function exportReportsCSV(funds, expenses) {
   const rows = [
@@ -74,6 +75,12 @@ function App() {
   const [invitationMaxUses, setInvitationMaxUses] = useState(5);
   const [invitationLoading, setInvitationLoading] = useState(false);
   const [invitationError, setInvitationError] = useState("");
+  const [committeeName, setCommitteeName] = useState("");
+  const [committeeEmail, setCommitteeEmail] = useState("");
+  const [committeePassword, setCommitteePassword] = useState("");
+  const [committeeLoading, setCommitteeLoading] = useState(false);
+  const [committeeError, setCommitteeError] = useState("");
+  const [committeeMessage, setCommitteeMessage] = useState("");
   const [fundName, setFundName] = useState("");
   const [fundAmount, setFundAmount] = useState("");
   const [fundType, setFundType] = useState("");
@@ -88,6 +95,8 @@ function App() {
   const [editExpenseAmount, setEditExpenseAmount] = useState("");
   const [editExpenseCategory, setEditExpenseCategory] = useState("");
   const [editExpenseDescription, setEditExpenseDescription] = useState("");
+  const [committeeMembers, setCommitteeMembers] = useState([]);
+  const [committeeListLoading, setCommitteeListLoading] = useState(false);
   const [editingFundId, setEditingFundId] = useState(null);
   const [editFundForm, setEditFundForm] = useState({
     name: "",
@@ -327,6 +336,16 @@ function App() {
 
     fetchFinancialData();
   }, [token, societyId]);
+
+  useEffect(() => {
+    if (
+      activePage === "Manage Invitations" &&
+      currentUser?.role === "admin" &&
+      token
+    ) {
+      fetchCommitteeMembers();
+    }
+  }, [activePage, currentUser, token]);
 
   const totalFunds = funds.reduce(
     (total, fund) => total + Number(fund.amount || 0),
@@ -755,6 +774,110 @@ function App() {
     }
   };
 
+  const fetchCommitteeMembers = async () => {
+    setCommitteeListLoading(true);
+
+    try {
+      const response = await fetch(
+        "https://society-fund-transparency.onrender.com/api/societies/committee",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Could not fetch committee members");
+      }
+
+      setCommitteeMembers(data.members || []);
+    } catch (error) {
+      setCommitteeError(error.message);
+    } finally {
+      setCommitteeListLoading(false);
+    }
+  };
+
+  const handleDeleteCommittee = async (memberId) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to remove this committee member?"
+    );
+
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch(
+        `https://society-fund-transparency.onrender.com/api/societies/committee/${memberId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Could not remove committee member");
+      }
+
+      setCommitteeMembers((prev) =>
+        prev.filter((member) => member._id !== memberId)
+      );
+
+      setCommitteeMessage("Committee member removed successfully!");
+      setCommitteeError("");
+    } catch (error) {
+      setCommitteeError(error.message);
+    }
+  };
+
+  const handleCreateCommittee = async (e) => {
+    e.preventDefault();
+    setCommitteeLoading(true);
+    setCommitteeError("");
+    setCommitteeMessage("");
+
+    try {
+      const response = await fetch(
+        "https://society-fund-transparency.onrender.com/api/societies/committee",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name: committeeName,
+            email: committeeEmail,
+            password: committeePassword,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Could not create committee member");
+      }
+
+      setCommitteeMessage("Committee member created successfully!");
+      setCommitteeName("");
+      setCommitteeEmail("");
+      setCommitteePassword("");
+
+      await fetchCommitteeMembers();
+    } catch (error) {
+      setCommitteeError(error.message);
+    } finally {
+      setCommitteeLoading(false);
+    }
+  };
+
   if (!token) {
     if (showSocietyRegister) {
       return (
@@ -784,6 +907,7 @@ function App() {
   }
   const menuItems = [
     { name: "Dashboard", icon: "▦" },
+    { name: "Budgets", icon: "◫" },
     { name: "Funds", icon: "₹" },
     { name: "Expenses", icon: "↗" },
     { name: "Reports", icon: "📊" },
@@ -951,6 +1075,10 @@ function App() {
             onViewExpenses={() => setActivePage("Expenses")}
           />
         </>
+      )}
+
+      {activePage === "Budgets" && (
+        <BudgetPage token={token} currentUser={currentUser} />
       )}
 
       {activePage === "Funds" && (
@@ -1166,146 +1294,152 @@ function App() {
           )}
 
           {expenses.map((expense) => (
-            
-<div className="recent-activity-list">
-  {expenses.map((expense) => (
-    <div className="recent-activity-item" key={expense._id}>
-      <div className="activity-type-icon expense">
-        ↗
-      </div>
+            <div className="recent-activity-list">
+              {expenses.map((expense) => (
+                <div className="recent-activity-item" key={expense._id}>
+                  <div className="activity-type-icon expense">↗</div>
 
-      <div className="recent-activity-info">
-        <strong>{expense.title || expense.name}</strong>
+                  <div className="recent-activity-info">
+                    <strong>{expense.title || expense.name}</strong>
 
-        <div className="recent-activity-meta">
-          <span className="activity-type-label expense">
-            Expense
-          </span>
+                    <div className="recent-activity-meta">
+                      <span className="activity-type-label expense">
+                        Expense
+                      </span>
 
-          {expense.category && <span>{expense.category}</span>}
+                      {expense.category && <span>{expense.category}</span>}
 
-          <span>
-            {expense.date || expense.createdAt
-              ? new Date(expense.date || expense.createdAt).toLocaleDateString(
-                  "en-IN",
-                  { day: "2-digit", month: "short", year: "numeric" }
-                )
-              : "Date unavailable"}
-          </span>
-        </div>
+                      <span>
+                        {expense.date || expense.createdAt
+                          ? new Date(
+                              expense.date || expense.createdAt
+                            ).toLocaleDateString("en-IN", {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric",
+                            })
+                          : "Date unavailable"}
+                      </span>
+                    </div>
 
-        {expense.description && (
-          <p className="recent-activity-description">
-            {expense.description}
-          </p>
-        )}
+                    {expense.description && (
+                      <p className="recent-activity-description">
+                        {expense.description}
+                      </p>
+                    )}
 
-        <p className="expense-status">
-          Status: <strong>{expense.status || "Pending"}</strong>
-        </p>
+                    <p className="expense-status">
+                      Status: <strong>{expense.status || "Pending"}</strong>
+                    </p>
 
-        {expense.status === "Changes Requested" && (
-          <p className="expense-feedback">
-            Committee feedback:{" "}
-            {expense.approvalHistory
-              ?.filter((item) => item.action === "Changes Requested")
-              .slice(-1)
-              .map((item, index) => (
-                <span key={index}>{item.comment}</span>
+                    {expense.status === "Changes Requested" && (
+                      <p className="expense-feedback">
+                        Committee feedback:{" "}
+                        {expense.approvalHistory
+                          ?.filter(
+                            (item) => item.action === "Changes Requested"
+                          )
+                          .slice(-1)
+                          .map((item, index) => (
+                            <span key={index}>{item.comment}</span>
+                          ))}
+                      </p>
+                    )}
+
+                    {expense.status === "Rejected" &&
+                      expense.rejectionReason && (
+                        <p className="expense-feedback">
+                          Rejection reason: {expense.rejectionReason}
+                        </p>
+                      )}
+                  </div>
+
+                  <div className="recent-activity-amount outgoing">
+                    <strong>
+                      −{formatCurrency(Number(expense.amount || 0))}
+                    </strong>
+                    <span>Money spent</span>
+                  </div>
+
+                  {currentUser?.role === "admin" &&
+                    ["Pending", "Changes Requested"].includes(
+                      expense.status
+                    ) && (
+                      <div className="expense-actions">
+                        <button
+                          type="button"
+                          onClick={() => startEditExpense(expense)}
+                        >
+                          Edit
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteExpense(expense._id)}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    )}
+
+                  {editingExpenseId === expense._id && (
+                    <form
+                      className="edit-record-form"
+                      onSubmit={handleUpdateExpense}
+                    >
+                      <input
+                        value={editExpenseTitle}
+                        onChange={(e) => setEditExpenseTitle(e.target.value)}
+                        placeholder="Expense title"
+                        required
+                      />
+
+                      <input
+                        type="number"
+                        min="1"
+                        value={editExpenseAmount}
+                        onChange={(e) => setEditExpenseAmount(e.target.value)}
+                        placeholder="Amount"
+                        required
+                      />
+
+                      <select
+                        value={editExpenseCategory}
+                        onChange={(e) => setEditExpenseCategory(e.target.value)}
+                        required
+                      >
+                        <option value="">Select category</option>
+                        <option value="Maintenance">Maintenance</option>
+                        <option value="Electricity">Electricity</option>
+                        <option value="Water">Water</option>
+                        <option value="Security">Security</option>
+                        <option value="Cleaning">Cleaning</option>
+                        <option value="Repairs">Repairs</option>
+                        <option value="Events">Events</option>
+                        <option value="Other">Other</option>
+                      </select>
+
+                      <textarea
+                        value={editExpenseDescription}
+                        onChange={(e) =>
+                          setEditExpenseDescription(e.target.value)
+                        }
+                        placeholder="Description"
+                      />
+
+                      <button type="submit">Save Changes</button>
+
+                      <button
+                        type="button"
+                        onClick={() => setEditingExpenseId(null)}
+                      >
+                        Cancel
+                      </button>
+                    </form>
+                  )}
+                </div>
               ))}
-          </p>
-        )}
-
-        {expense.status === "Rejected" && expense.rejectionReason && (
-          <p className="expense-feedback">
-            Rejection reason: {expense.rejectionReason}
-          </p>
-        )}
-      </div>
-
-      <div className="recent-activity-amount outgoing">
-        <strong>
-          −{formatCurrency(Number(expense.amount || 0))}
-        </strong>
-        <span>Money spent</span>
-      </div>
-
-      {currentUser?.role === "admin" &&
-        ["Pending", "Changes Requested"].includes(expense.status) && (
-          <div className="expense-actions">
-            <button
-              type="button"
-              onClick={() => startEditExpense(expense)}
-            >
-              Edit
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleDeleteExpense(expense._id)}
-            >
-              Delete
-            </button>
-          </div>
-        )}
-
-      {editingExpenseId === expense._id && (
-        <form
-          className="edit-record-form"
-          onSubmit={handleUpdateExpense}
-        >
-          <input
-            value={editExpenseTitle}
-            onChange={(e) => setEditExpenseTitle(e.target.value)}
-            placeholder="Expense title"
-            required
-          />
-
-          <input
-            type="number"
-            min="1"
-            value={editExpenseAmount}
-            onChange={(e) => setEditExpenseAmount(e.target.value)}
-            placeholder="Amount"
-            required
-          />
-
-          <select
-            value={editExpenseCategory}
-            onChange={(e) => setEditExpenseCategory(e.target.value)}
-            required
-          >
-            <option value="">Select category</option>
-            <option value="Maintenance">Maintenance</option>
-            <option value="Electricity">Electricity</option>
-            <option value="Water">Water</option>
-            <option value="Security">Security</option>
-            <option value="Cleaning">Cleaning</option>
-            <option value="Repairs">Repairs</option>
-            <option value="Events">Events</option>
-            <option value="Other">Other</option>
-          </select>
-
-          <textarea
-            value={editExpenseDescription}
-            onChange={(e) => setEditExpenseDescription(e.target.value)}
-            placeholder="Description"
-          />
-
-          <button type="submit">Save Changes</button>
-
-          <button
-            type="button"
-            onClick={() => setEditingExpenseId(null)}
-          >
-            Cancel
-          </button>
-        </form>
-      )}
-    </div>
-  ))}
-</div>
-
+            </div>
           ))}
         </section>
       )}
@@ -1813,6 +1947,82 @@ function App() {
               </button>
             </div>
           )}
+
+          <div className="committee-management-section">
+            <h2>Committee Management</h2>
+            <p>Add and manage your society committee members.</p>
+
+            <form className="expense-form" onSubmit={handleCreateCommittee}>
+              <input
+                type="text"
+                placeholder="Full name"
+                value={committeeName}
+                onChange={(e) => setCommitteeName(e.target.value)}
+                required
+              />
+
+              <input
+                type="email"
+                placeholder="Email address"
+                value={committeeEmail}
+                onChange={(e) => setCommitteeEmail(e.target.value)}
+                required
+              />
+
+              <input
+                type="password"
+                placeholder="Password (minimum 8 characters)"
+                value={committeePassword}
+                onChange={(e) => setCommitteePassword(e.target.value)}
+                minLength={8}
+                required
+              />
+
+              <button
+                className="primary-button"
+                type="submit"
+                disabled={committeeLoading}
+              >
+                {committeeLoading ? "Please wait..." : "+ Add Committee Member"}
+              </button>
+            </form>
+
+            {committeeError && <p className="login-error">{committeeError}</p>}
+
+            {committeeMessage && (
+              <p className="success-message">{committeeMessage}</p>
+            )}
+
+            <div className="committee-list">
+              <h3>Existing Committee Members</h3>
+
+              {committeeLoading && <p>Loading members...</p>}
+
+              {!committeeLoading && committeeMembers.length === 0 && (
+                <p className="coming-soon">No committee members found.</p>
+              )}
+
+              {committeeMembers.map((member) => (
+                <div className="recent-activity-item" key={member._id}>
+                  <div className="recent-activity-info">
+                    <strong>{member.name}</strong>
+                    <div className="recent-activity-meta">
+                      <span>{member.email}</span>
+                      <span>Committee Member</span>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="primary-button"
+                    onClick={() => handleDeleteCommittee(member._id)}
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
         </section>
       )}
 
