@@ -2094,3 +2094,180 @@ footer {
   color: #8ed4c3 !important;
   border: 1px solid #365348 !important;
 }
+
+
+/* =========================================
+   DARK MODE FIX: FUNDS, EXPENSES, SOCIETY
+   AND MANAGE INVITATIONS
+   ========================================= */
+
+/* Common form panels */
+[data-theme="dark"] .expense-form,
+.dark .expense-form,
+[data-theme="dark"] .fund-form-card,
+.dark .fund-form-card,
+[data-theme="dark"] .invitation-fields,
+.dark .invitation-fields {
+  background: #172720 !important;
+  border-color: #2b4038 !important;
+  color: #e2e8f0;
+  box-shadow: none;
+}
+
+/* Fund form heading */
+[data-theme="dark"] .fund-form-heading h3,
+.dark .fund-form-heading h3,
+[data-theme="dark"] .society-header h2,
+.dark .society-header h2 {
+  color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .fund-form-heading p,
+.dark .fund-form-heading p,
+[data-theme="dark"] .fund-form-footer span,
+.dark .fund-form-footer span,
+[data-theme="dark"] .society-subtitle,
+.dark .society-subtitle {
+  color: #a6b8af !important;
+}
+
+/* All form inputs */
+[data-theme="dark"] .expense-form input,
+[data-theme="dark"] .expense-form select,
+[data-theme="dark"] .expense-form textarea,
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .fund-form-grid input,
+[data-theme="dark"] .fund-form-grid select,
+[data-theme="dark"] .fund-form-grid textarea,
+[data-theme="dark"] .invitation-fields input,
+.dark .expense-form input,
+.dark .expense-form select,
+.dark .expense-form textarea,
+.dark .form-control,
+.dark .fund-form-grid input,
+.dark .fund-form-grid select,
+.dark .fund-form-grid textarea,
+.dark .invitation-fields input {
+  background: #101d18 !important;
+  color: #e2e8f0 !important;
+  border-color: #344a40 !important;
+  color-scheme: dark;
+}
+
+/* Input placeholders */
+[data-theme="dark"] .expense-form input::placeholder,
+[data-theme="dark"] .expense-form textarea::placeholder,
+[data-theme="dark"] .fund-form-grid input::placeholder,
+[data-theme="dark"] .fund-form-grid textarea::placeholder,
+.dark .expense-form input::placeholder,
+.dark .expense-form textarea::placeholder,
+.dark .fund-form-grid input::placeholder,
+.dark .fund-form-grid textarea::placeholder {
+  color: #81958a !important;
+}
+
+/* Input focus */
+[data-theme="dark"] .expense-form input:focus,
+[data-theme="dark"] .expense-form select:focus,
+[data-theme="dark"] .expense-form textarea:focus,
+[data-theme="dark"] .fund-form-grid input:focus,
+[data-theme="dark"] .fund-form-grid select:focus,
+[data-theme="dark"] .fund-form-grid textarea:focus,
+[data-theme="dark"] .invitation-fields input:focus,
+.dark .expense-form input:focus,
+.dark .expense-form select:focus,
+.dark .expense-form textarea:focus,
+.dark .fund-form-grid input:focus,
+.dark .fund-form-grid select:focus,
+.dark .fund-form-grid textarea:focus,
+.dark .invitation-fields input:focus {
+  background: #101d18 !important;
+  border-color: #559f8e !important;
+  box-shadow: 0 0 0 3px rgba(85, 159, 142, 0.15) !important;
+}
+
+/* Invitation form labels */
+[data-theme="dark"] .invitation-fields label,
+.dark .invitation-fields label {
+  color: #d8e5dd !important;
+}
+
+[data-theme="dark"] .invitation-fields small,
+.dark .invitation-fields small {
+  color: #a6b8af !important;
+}
+
+/* Fund form footer */
+[data-theme="dark"] .fund-form-footer,
+.dark .fund-form-footer {
+  border-color: #2b4038 !important;
+}
+
+/* Society information banner */
+[data-theme="dark"] .society-name-banner,
+.dark .society-name-banner {
+  background: #20372e !important;
+  color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .society-name-banner h3,
+.dark .society-name-banner h3 {
+  color: #f1f5f2 !important;
+}
+
+[data-theme="dark"] .society-label,
+.dark .society-label {
+  color: #a6c5b8 !important;
+}
+
+/* Society detail cards */
+[data-theme="dark"] .society-detail,
+.dark .society-detail {
+  background: #172720 !important;
+  border-color: #2b4038 !important;
+}
+
+[data-theme="dark"] .society-detail p,
+.dark .society-detail p {
+  color: #a6b8af !important;
+}
+
+[data-theme="dark"] .society-detail strong,
+.dark .society-detail strong {
+  color: #e2e8f0 !important;
+}
+
+/* Society and form icons */
+[data-theme="dark"] .society-icon,
+.dark .society-icon,
+[data-theme="dark"] .society-detail-icon,
+.dark .society-detail-icon,
+[data-theme="dark"] .fund-form-icon,
+.dark .fund-form-icon {
+  background: #20372e !important;
+  color: #8ed4c3 !important;
+}
+
+/* Expense form buttons */
+[data-theme="dark"] .expense-form .primary-button,
+.dark .expense-form .primary-button {
+  background: #559488;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .expense-form .primary-button:hover,
+.dark .expense-form .primary-button:hover {
+  background: #417d71;
+}
+
+/* Fund form button */
+[data-theme="dark"] .fund-form-footer button,
+.dark .fund-form-footer button {
+  background: #559488;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .fund-form-footer button:hover,
+.dark .fund-form-footer button:hover {
+  background: #417d71;
+}
