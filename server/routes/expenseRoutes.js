@@ -1,3 +1,4 @@
+
 const express = require("express");
 const router = express.Router();
 
@@ -9,9 +10,11 @@ const {
   getExpenses,
   updateExpense,
   deleteExpense,
+  approveExpense,
+  rejectExpense,
 } = require("../controllers/expenseController");
 
-// Admin only: create an expense
+// Admin: create expenses
 router.post(
   "/",
   protect,
@@ -19,14 +22,10 @@ router.post(
   createExpense
 );
 
-// Logged-in users: view expenses for a society
-router.get(
-  "/:societyId",
-  protect,
-  getExpenses
-);
+// All logged-in users: view expenses
+router.get("/", protect, getExpenses);
 
-// Admin only: update an expense
+// Admin: edit or delete pending expenses
 router.put(
   "/:id",
   protect,
@@ -34,12 +33,26 @@ router.put(
   updateExpense
 );
 
-// Admin only: delete an expense
 router.delete(
   "/:id",
   protect,
   authorizeRoles("admin"),
   deleteExpense
+);
+
+// Committee: approve or reject expenses
+router.patch(
+  "/:id/approve",
+  protect,
+  authorizeRoles("committee"),
+  approveExpense
+);
+
+router.patch(
+  "/:id/reject",
+  protect,
+  authorizeRoles("committee"),
+  rejectExpense
 );
 
 module.exports = router;

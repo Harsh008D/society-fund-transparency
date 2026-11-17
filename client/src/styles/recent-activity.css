@@ -1,0 +1,219 @@
+
+.recent-activity-card {
+    margin-bottom: 24px;
+  }
+  
+  .recent-activity-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .recent-activity-header h2 {
+    color: var(--color-text);
+    font-size: 17px;
+    font-weight: 650;
+  }
+  
+  .recent-activity-header p {
+    margin-top: 6px;
+    color: var(--color-text-muted);
+    font-size: 12px;
+  }
+  
+  .activity-filters {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .activity-filters button {
+    padding: 8px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: var(--color-surface);
+    color: var(--color-primary);
+    font-size: 11px;
+    font-weight: 600;
+  }
+  
+  .activity-filters button:hover {
+    background: var(--color-primary-soft);
+  }
+  
+  .recent-activity-list {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .recent-activity-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 17px 0;
+    border-top: 1px solid var(--color-border);
+  }
+  
+  .activity-type-icon {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+  }
+  
+  .activity-type-icon.fund {
+    background: #E6F0ED;
+    color: #54877D;
+  }
+  
+  .activity-type-icon.expense {
+    background: #F5EEE4;
+    color: #B98542;
+  }
+  
+  .recent-activity-info {
+    min-width: 0;
+    flex: 1;
+  }
+  
+  .recent-activity-info > strong {
+    display: block;
+    overflow: hidden;
+    color: var(--color-text);
+    font-size: 13px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .recent-activity-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 7px;
+    color: var(--color-text-muted);
+    font-size: 11px;
+  }
+  
+  .activity-type-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 600;
+  }
+  
+  .activity-type-label.fund {
+    color: var(--color-primary);
+  }
+  
+  .activity-type-label.expense {
+    color: var(--color-warning);
+  }
+  
+  .recent-activity-description {
+    margin-top: 6px;
+    color: var(--color-text-muted);
+    font-size: 11px;
+  }
+  
+  .recent-activity-amount {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+    flex-shrink: 0;
+  }
+  
+  .recent-activity-amount strong {
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  
+  .recent-activity-amount span {
+    color: var(--color-text-muted);
+    font-size: 10px;
+  }
+  
+  .recent-activity-amount.incoming strong {
+    color: var(--color-primary);
+  }
+  
+  .recent-activity-amount.outgoing strong {
+    color: var(--color-warning);
+  }
+  
+  .recent-activity-empty {
+    min-height: 190px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 9px;
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+  }
+  
+  .empty-activity-icon {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
+  }
+  
+  .recent-activity-empty strong {
+    color: var(--color-text);
+    font-size: 13px;
+  }
+  
+  .recent-activity-empty p {
+    color: var(--color-text-muted);
+    font-size: 11px;
+  }
+  
+  [data-theme="dark"] .activity-type-icon.fund {
+    background: #263B35;
+    color: #82AAA0;
+  }
+  
+  [data-theme="dark"] .activity-type-icon.expense {
+    background: #3C3327;
+    color: #D9AD70;
+  }
+  
+  @media (max-width: 600px) {
+    .recent-activity-header {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  
+    .recent-activity-item {
+      gap: 10px;
+    }
+  
+    .activity-type-icon {
+      width: 36px;
+      height: 36px;
+    }
+  
+    .recent-activity-meta {
+      gap: 7px;
+    }
+  
+    .recent-activity-amount strong {
+      font-size: 11px;
+    }
+  
+    .recent-activity-amount span {
+      display: none;
+    }
+  }
+  

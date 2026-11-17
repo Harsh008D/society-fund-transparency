@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Society",
       required: function () {
-        return this.role === "resident";
+        return ["resident", "committee"].includes(this.role);
       },
     },
   },
