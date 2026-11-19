@@ -122,14 +122,11 @@ function App() {
       setSocietyLoading(true);
 
       try {
-        const response = await fetch(
-          "https://society-fund-transparency.onrender.com/api/auth/profile",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch("http://localhost:5050/api/auth/profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         const data = await response.json();
 
@@ -155,23 +152,20 @@ function App() {
     setFundSubmitting(true);
 
     try {
-      const response = await fetch(
-        "https://society-fund-transparency.onrender.com/api/funds",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            name: fundName,
-            amount: Number(fundAmount),
-            type: fundType,
-            description: fundDescription,
-            date: fundDate || new Date().toISOString(),
-          }),
-        }
-      );
+      const response = await fetch("http://localhost:5050/api/funds", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          name: fundName,
+          amount: Number(fundAmount),
+          type: fundType,
+          description: fundDescription,
+          date: fundDate || new Date().toISOString(),
+        }),
+      });
 
       const data = await response.json();
 
@@ -223,7 +217,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `https://society-fund-transparency.onrender.com/api/funds/${editingFundId}`,
+        `http://localhost:5050/api/funds/${editingFundId}`,
         {
           method: "PUT",
           headers: {
@@ -260,7 +254,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `https://society-fund-transparency.onrender.com/api/funds/${fundId}`,
+        `http://localhost:5050/api/funds/${fundId}`,
         {
           method: "DELETE",
           headers: {
@@ -299,13 +293,10 @@ function App() {
         };
 
         const [fundsResponse, expensesResponse] = await Promise.all([
-          fetch(
-            `https://society-fund-transparency.onrender.com/api/funds/${societyId}`,
-            {
-              headers,
-            }
-          ),
-          fetch("https://society-fund-transparency.onrender.com/api/expenses", {
+          fetch(`http://localhost:5050/api/funds/${societyId}`, {
+            headers,
+          }),
+          fetch("http://localhost:5050/api/expenses", {
             headers,
           }),
         ]);
@@ -538,23 +529,20 @@ function App() {
     e.preventDefault();
 
     try {
-      const response = await fetch(
-        "https://society-fund-transparency.onrender.com/api/expenses",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            title: expenseTitle,
-            amount: Number(expenseAmount),
-            category: expenseCategory,
-            description: expenseDescription,
-            society: societyId,
-          }),
-        }
-      );
+      const response = await fetch("http://localhost:5050/api/expenses", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title: expenseTitle,
+          amount: Number(expenseAmount),
+          category: expenseCategory,
+          description: expenseDescription,
+          society: societyId,
+        }),
+      });
 
       const data = await response.json();
 
@@ -585,7 +573,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `https://society-fund-transparency.onrender.com/api/expenses/${editingExpenseId}`,
+        `http://localhost:5050/api/expenses/${editingExpenseId}`,
         {
           method: "PUT",
           headers: {
@@ -662,7 +650,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `https://society-fund-transparency.onrender.com/api/expenses/${expenseId}/${action}`,
+        `http://localhost:5050/api/expenses/${expenseId}/${action}`,
         {
           method: "PATCH",
           headers: {
@@ -714,7 +702,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `https://society-fund-transparency.onrender.com/api/expenses/${expenseId}`,
+        `http://localhost:5050/api/expenses/${expenseId}`,
         {
           method: "DELETE",
           headers: {
@@ -745,20 +733,17 @@ function App() {
     setInvitationCode("");
 
     try {
-      const response = await fetch(
-        "https://society-fund-transparency.onrender.com/api/invitations",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            expiresInDays: Number(invitationExpiry),
-            maxUses: Number(invitationMaxUses),
-          }),
-        }
-      );
+      const response = await fetch("http://localhost:5050/api/invitations", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          expiresInDays: Number(invitationExpiry),
+          maxUses: Number(invitationMaxUses),
+        }),
+      });
 
       const data = await response.json();
 
@@ -779,7 +764,7 @@ function App() {
 
     try {
       const response = await fetch(
-        "https://society-fund-transparency.onrender.com/api/societies/committee",
+        "http://localhost:5050/api/societies/committee",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -810,7 +795,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `https://society-fund-transparency.onrender.com/api/societies/committee/${memberId}`,
+        `http://localhost:5050/api/societies/committee/${memberId}`,
         {
           method: "DELETE",
           headers: {
@@ -844,7 +829,7 @@ function App() {
 
     try {
       const response = await fetch(
-        "https://society-fund-transparency.onrender.com/api/societies/committee",
+        "http://localhost:5050/api/societies/committee",
         {
           method: "POST",
           headers: {
@@ -1128,7 +1113,7 @@ function App() {
                   <option value="maintenance">Maintenance</option>
                   <option value="events">Events</option>
                   <option value="donations">Donations</option>
-                  <option value="special">Special</option>
+                  <option value="special">Special</option>z
                   <option value="other">Other</option>
                 </select>
 
@@ -1234,8 +1219,8 @@ function App() {
 
                   <select
                     name="type"
-                    value={fundForm.type}
-                    onChange={handleFundChange}
+                    value={editFundForm.type}
+                    onChange={handleEditFundChange}
                     required
                   >
                     <option value="">Select fund type</option>

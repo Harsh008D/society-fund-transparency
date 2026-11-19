@@ -25,7 +25,7 @@ function Login({ onLogin, onSignupClick, onSocietyRegisterClick }) {
 
     try {
       const response = await fetch(
-        'https://society-fund-transparency.onrender.com/api/auth/login',
+        'http://localhost:5050/api/auth/login',
         {
           method: 'POST',
           headers: {
