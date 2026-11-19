@@ -19,7 +19,7 @@ function Signup({ onBackToLogin, onRegister }) {
 
     try {
       const response = await fetch(
-        'http://localhost:5050/api/auth/register',
+        'https://society-fund-transparency.onrender.com/api/auth/register',
         {
           method: 'POST',
           headers: {
