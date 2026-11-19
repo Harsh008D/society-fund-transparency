@@ -1126,9 +1126,9 @@ function App() {
                 >
                   <option value="">Select fund type</option>
                   <option value="maintenance">Maintenance</option>
-                  <option value="donations">Donations</option>
-                  <option value="utilities">Utilities</option>
                   <option value="events">Events</option>
+                  <option value="donations">Donations</option>
+                  <option value="special">Special</option>
                   <option value="other">Other</option>
                 </select>
 
@@ -1166,58 +1166,106 @@ function App() {
           )}
 
           {funds.map((fund) => (
-            <div className="recent-activity-item" key={fund._id}>
-              <div className="activity-type-icon fund">↙</div>
+            <div className="fund-list-item" key={fund._id}>
+              {/* Fund display row */}
+              <div className="activity-row">
+                <div className="activity-icon">₹</div>
 
-              <div className="recent-activity-info">
-                <strong>{fund.name || "Untitled fund"}</strong>
-
-                <div className="recent-activity-meta">
-                  <span className="activity-type-label fund">₹ Fund</span>
-
-                  {fund.type && <span>{fund.type}</span>}
-
-                  <span>
-                    {fund.date
-                      ? new Date(fund.date).toLocaleDateString("en-IN", {
-                          day: "2-digit",
-                          month: "short",
-                          year: "numeric",
-                        })
-                      : "Date unavailable"}
-                  </span>
+                <div className="activity-details">
+                  <strong>{fund.name}</strong>
+                  <p>
+                    {fund.type} · {fund.description}
+                  </p>
                 </div>
 
-                {fund.description && (
-                  <p className="recent-activity-description">
-                    {fund.description}
+                <div className="activity-amount">
+                  <strong>
+                    ₹{Number(fund.amount).toLocaleString("en-IN")}
+                  </strong>
+                  <p>
+                    {fund.date
+                      ? new Date(fund.date).toLocaleDateString("en-IN")
+                      : ""}
                   </p>
+                </div>
+
+                {currentUser?.role === "admin" && (
+                  <div className="expense-actions">
+                    <button type="button" onClick={() => startEditFund(fund)}>
+                      Edit
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteFund(fund._id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 )}
               </div>
 
-              <div className="recent-activity-amount incoming">
-                <strong>+{formatCurrency(Number(fund.amount || 0))}</strong>
-                <span>Money received</span>
-              </div>
-
-              {currentUser?.role === "admin" && (
-                <div className="expense-actions">
-                  <button type="button" onClick={() => startEditFund(fund)}>
-                    Edit
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => handleDeleteFund(fund._id)}
-                  >
-                    Delete
-                  </button>
-                </div>
-              )}
-
+              {/* Separate edit form below the fund row */}
               {editingFundId === fund._id && (
-                <form className="edit-record-form" onSubmit={handleUpdateFund}>
-                  {/* Keep your existing fund edit form here, unchanged */}
+                <form
+                  className="edit-record-form fund-edit-form"
+                  onSubmit={handleUpdateFund}
+                >
+                  <h3>Edit Fund</h3>
+
+                  <input
+                    name="name"
+                    value={editFundForm.name}
+                    onChange={handleEditFundChange}
+                    placeholder="Fund name"
+                    required
+                  />
+
+                  <input
+                    name="amount"
+                    type="number"
+                    min="0.01"
+                    step="0.01"
+                    value={editFundForm.amount}
+                    onChange={handleEditFundChange}
+                    placeholder="Amount"
+                    required
+                  />
+
+                  <select
+                    name="type"
+                    value={fundForm.type}
+                    onChange={handleFundChange}
+                    required
+                  >
+                    <option value="">Select fund type</option>
+                    <option value="maintenance">Maintenance</option>
+                    <option value="events">Events</option>
+                    <option value="donations">Donations</option>
+                    <option value="special">Special</option>
+                    <option value="other">Other</option>
+                  </select>
+
+                  <input
+                    name="date"
+                    type="date"
+                    value={editFundForm.date}
+                    onChange={handleEditFundChange}
+                  />
+
+                  <textarea
+                    name="description"
+                    value={editFundForm.description}
+                    onChange={handleEditFundChange}
+                    placeholder="Description"
+                  />
+
+                  <div className="fund-edit-actions">
+                    <button type="submit">Save Changes</button>
+                    <button type="button" onClick={cancelEditFund}>
+                      Cancel
+                    </button>
+                  </div>
                 </form>
               )}
             </div>
@@ -1293,154 +1341,145 @@ function App() {
             <p className="coming-soon">No expense records found.</p>
           )}
 
-          {expenses.map((expense) => (
-            <div className="recent-activity-list">
-              {expenses.map((expense) => (
-                <div className="recent-activity-item" key={expense._id}>
-                  <div className="activity-type-icon expense">↗</div>
+          <div className="recent-activity-list">
+            {expenses.map((expense) => (
+              <div className="recent-activity-item" key={expense._id}>
+                <div className="activity-type-icon expense">↗</div>
 
-                  <div className="recent-activity-info">
-                    <strong>{expense.title || expense.name}</strong>
+                <div className="recent-activity-info">
+                  <strong>{expense.title || expense.name}</strong>
 
-                    <div className="recent-activity-meta">
-                      <span className="activity-type-label expense">
-                        Expense
-                      </span>
+                  <div className="recent-activity-meta">
+                    <span className="activity-type-label expense">Expense</span>
 
-                      {expense.category && <span>{expense.category}</span>}
+                    {expense.category && <span>{expense.category}</span>}
 
-                      <span>
-                        {expense.date || expense.createdAt
-                          ? new Date(
-                              expense.date || expense.createdAt
-                            ).toLocaleDateString("en-IN", {
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                            })
-                          : "Date unavailable"}
-                      </span>
-                    </div>
+                    <span>
+                      {expense.date || expense.createdAt
+                        ? new Date(
+                            expense.date || expense.createdAt
+                          ).toLocaleDateString("en-IN", {
+                            day: "2-digit",
+                            month: "short",
+                            year: "numeric",
+                          })
+                        : "Date unavailable"}
+                    </span>
+                  </div>
 
-                    {expense.description && (
-                      <p className="recent-activity-description">
-                        {expense.description}
-                      </p>
-                    )}
-
-                    <p className="expense-status">
-                      Status: <strong>{expense.status || "Pending"}</strong>
+                  {expense.description && (
+                    <p className="recent-activity-description">
+                      {expense.description}
                     </p>
+                  )}
 
-                    {expense.status === "Changes Requested" && (
-                      <p className="expense-feedback">
-                        Committee feedback:{" "}
-                        {expense.approvalHistory
-                          ?.filter(
-                            (item) => item.action === "Changes Requested"
-                          )
-                          .slice(-1)
-                          .map((item, index) => (
-                            <span key={index}>{item.comment}</span>
-                          ))}
-                      </p>
-                    )}
+                  <p className="expense-status">
+                    Status: <strong>{expense.status || "Pending"}</strong>
+                  </p>
 
-                    {expense.status === "Rejected" &&
-                      expense.rejectionReason && (
-                        <p className="expense-feedback">
-                          Rejection reason: {expense.rejectionReason}
-                        </p>
-                      )}
-                  </div>
+                  {expense.status === "Changes Requested" && (
+                    <p className="expense-feedback">
+                      Committee feedback:{" "}
+                      {expense.approvalHistory
+                        ?.filter((item) => item.action === "Changes Requested")
+                        .slice(-1)
+                        .map((item, index) => (
+                          <span key={index}>{item.comment}</span>
+                        ))}
+                    </p>
+                  )}
 
-                  <div className="recent-activity-amount outgoing">
-                    <strong>
-                      −{formatCurrency(Number(expense.amount || 0))}
-                    </strong>
-                    <span>Money spent</span>
-                  </div>
+                  {expense.status === "Rejected" && expense.rejectionReason && (
+                    <p className="expense-feedback">
+                      Rejection reason: {expense.rejectionReason}
+                    </p>
+                  )}
+                </div>
 
-                  {currentUser?.role === "admin" &&
-                    ["Pending", "Changes Requested"].includes(
-                      expense.status
-                    ) && (
-                      <div className="expense-actions">
-                        <button
-                          type="button"
-                          onClick={() => startEditExpense(expense)}
-                        >
-                          Edit
-                        </button>
+                <div className="recent-activity-amount outgoing">
+                  <strong>
+                    −{formatCurrency(Number(expense.amount || 0))}
+                  </strong>
+                  <span>Money spent</span>
+                </div>
 
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteExpense(expense._id)}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    )}
-
-                  {editingExpenseId === expense._id && (
-                    <form
-                      className="edit-record-form"
-                      onSubmit={handleUpdateExpense}
-                    >
-                      <input
-                        value={editExpenseTitle}
-                        onChange={(e) => setEditExpenseTitle(e.target.value)}
-                        placeholder="Expense title"
-                        required
-                      />
-
-                      <input
-                        type="number"
-                        min="1"
-                        value={editExpenseAmount}
-                        onChange={(e) => setEditExpenseAmount(e.target.value)}
-                        placeholder="Amount"
-                        required
-                      />
-
-                      <select
-                        value={editExpenseCategory}
-                        onChange={(e) => setEditExpenseCategory(e.target.value)}
-                        required
+                {currentUser?.role === "admin" &&
+                  ["Pending", "Changes Requested"].includes(expense.status) && (
+                    <div className="expense-actions">
+                      <button
+                        type="button"
+                        onClick={() => startEditExpense(expense)}
                       >
-                        <option value="">Select category</option>
-                        <option value="Maintenance">Maintenance</option>
-                        <option value="Electricity">Electricity</option>
-                        <option value="Water">Water</option>
-                        <option value="Security">Security</option>
-                        <option value="Cleaning">Cleaning</option>
-                        <option value="Repairs">Repairs</option>
-                        <option value="Events">Events</option>
-                        <option value="Other">Other</option>
-                      </select>
-
-                      <textarea
-                        value={editExpenseDescription}
-                        onChange={(e) =>
-                          setEditExpenseDescription(e.target.value)
-                        }
-                        placeholder="Description"
-                      />
-
-                      <button type="submit">Save Changes</button>
+                        Edit
+                      </button>
 
                       <button
                         type="button"
-                        onClick={() => setEditingExpenseId(null)}
+                        onClick={() => handleDeleteExpense(expense._id)}
                       >
-                        Cancel
+                        Delete
                       </button>
-                    </form>
+                    </div>
                   )}
-                </div>
-              ))}
-            </div>
-          ))}
+
+                {editingExpenseId === expense._id && (
+                  <form
+                    className="edit-record-form"
+                    onSubmit={handleUpdateExpense}
+                  >
+                    <input
+                      value={editExpenseTitle}
+                      onChange={(e) => setEditExpenseTitle(e.target.value)}
+                      placeholder="Expense title"
+                      required
+                    />
+
+                    <input
+                      type="number"
+                      min="1"
+                      value={editExpenseAmount}
+                      onChange={(e) => setEditExpenseAmount(e.target.value)}
+                      placeholder="Amount"
+                      required
+                    />
+
+                    <select
+                      value={editExpenseCategory}
+                      onChange={(e) => setEditExpenseCategory(e.target.value)}
+                      required
+                    >
+                      <option value="">Select category</option>
+                      <option value="Maintenance">Maintenance</option>
+                      <option value="Electricity">Electricity</option>
+                      <option value="Water">Water</option>
+                      <option value="Security">Security</option>
+                      <option value="Cleaning">Cleaning</option>
+                      <option value="Repairs">Repairs</option>
+                      <option value="Events">Events</option>
+                      <option value="Other">Other</option>
+                    </select>
+
+                    <textarea
+                      value={editExpenseDescription}
+                      onChange={(e) =>
+                        setEditExpenseDescription(e.target.value)
+                      }
+                      placeholder="Description"
+                    />
+
+                    <button type="submit">Save Changes</button>
+
+                    <button
+                      type="button"
+                      onClick={() => setEditingExpenseId(null)}
+                    >
+                      Cancel
+                    </button>
+                  </form>
+                )}
+              </div>
+            ))}
+          </div>
         </section>
       )}
 

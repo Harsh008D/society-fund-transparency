@@ -320,6 +320,7 @@ button {
 
 .activity-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 14px;
   padding: 17px 0;
@@ -1365,31 +1366,48 @@ footer {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
+  flex: 0 0 100%;
   width: 100%;
+  box-sizing: border-box;
   margin-top: 14px;
+  padding: 18px;
+  border: 1px solid #dce8e4;
+  border-radius: 12px;
+  background: #f8fbfa;
 }
 
 .edit-record-form input,
 .edit-record-form select,
 .edit-record-form textarea {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #dce4e8;
   border-radius: 8px;
   box-sizing: border-box;
+  font: inherit;
 }
 
 .edit-record-form textarea {
   grid-column: 1 / -1;
+  min-height: 80px;
+  resize: vertical;
+}
+
+.edit-record-form button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
 @media (max-width: 650px) {
-  .record-actions {
-    flex-wrap: wrap;
-  }
-
   .edit-record-form {
     grid-template-columns: 1fr;
+  }
+
+  .edit-record-form textarea {
+    grid-column: auto;
   }
 }
 /* Expense edit form */
@@ -2094,8 +2112,6 @@ footer {
   color: #8ed4c3 !important;
   border: 1px solid #365348 !important;
 }
-
-
 /* =========================================
    DARK MODE FIX: FUNDS, EXPENSES, SOCIETY
    AND MANAGE INVITATIONS
@@ -2270,4 +2286,90 @@ footer {
 [data-theme="dark"] .fund-form-footer button:hover,
 .dark .fund-form-footer button:hover {
   background: #417d71;
+}
+
+/* Fund list structure */
+.fund-list-item {
+  width: 100%;
+  border-top: 1px solid #2b3b35;
+  box-sizing: border-box;
+}
+
+.fund-list-item .activity-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+}
+
+/* Fund edit form */
+.fund-edit-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 0 18px;
+  padding: 22px;
+  background: #172721;
+  border: 1px solid #344b40;
+  border-radius: 12px;
+}
+
+.fund-edit-form h3 {
+  grid-column: 1 / -1;
+  margin: 0 0 5px;
+  color: #e5eee9;
+}
+
+.fund-edit-form input,
+.fund-edit-form select,
+.fund-edit-form textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 13px;
+  color: #e5eee9;
+  background: #101d18;
+  border: 1px solid #354b40;
+  border-radius: 8px;
+  font: inherit;
+}
+
+.fund-edit-form textarea {
+  grid-column: 1 / -1;
+  min-height: 90px;
+  resize: vertical;
+}
+
+.fund-edit-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.fund-edit-actions button {
+  padding: 11px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+@media (max-width: 650px) {
+  .fund-list-item .activity-row {
+    flex-wrap: wrap;
+  }
+
+  .fund-edit-form {
+    grid-template-columns: 1fr;
+  }
+
+  .fund-edit-form h3,
+  .fund-edit-form textarea,
+  .fund-edit-actions {
+    grid-column: 1;
+  }
 }

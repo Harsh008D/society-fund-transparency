@@ -21,7 +21,7 @@ const fundSchema = new mongoose.Schema(
 
     type: {
       type: String,
-      enum: ["maintenance", "reserve", "special", "other"],
+      enum: ["maintenance", "events", "donations", "special", "other"],
       required: true,
     },
 
