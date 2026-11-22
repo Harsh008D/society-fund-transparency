@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "../../styles/budget.css";
 
-const API_URL = "https://society-fund-transparency.onrender.com/api/budgets";
+const API_URL = "http://localhost:5050/api/budgets";
 
 const CATEGORIES = [
   "Maintenance",
