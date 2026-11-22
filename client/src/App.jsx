@@ -122,7 +122,7 @@ function App() {
       setSocietyLoading(true);
 
       try {
-        const response = await fetch("http://https://society-fund-transparency.onrender.com/api/auth/profile", {
+        const response = await fetch("https://society-fund-transparency.onrender.com/api/auth/profile", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -152,7 +152,7 @@ function App() {
     setFundSubmitting(true);
 
     try {
-      const response = await fetch("http://https://society-fund-transparency.onrender.com/api/funds", {
+      const response = await fetch("https://society-fund-transparency.onrender.com/api/funds", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -217,7 +217,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `http://https://society-fund-transparency.onrender.com/api/funds/${editingFundId}`,
+        `https://society-fund-transparency.onrender.com/api/funds/${editingFundId}`,
         {
           method: "PUT",
           headers: {
@@ -254,7 +254,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `http://https://society-fund-transparency.onrender.com/api/funds/${fundId}`,
+        `https://society-fund-transparency.onrender.com/api/funds/${fundId}`,
         {
           method: "DELETE",
           headers: {
@@ -293,10 +293,10 @@ function App() {
         };
 
         const [fundsResponse, expensesResponse] = await Promise.all([
-          fetch(`http://https://society-fund-transparency.onrender.com/api/funds/${societyId}`, {
+          fetch(`https://society-fund-transparency.onrender.com/api/funds/${societyId}`, {
             headers,
           }),
-          fetch("http://https://society-fund-transparency.onrender.com/api/expenses", {
+          fetch("https://society-fund-transparency.onrender.com/api/expenses", {
             headers,
           }),
         ]);
@@ -529,7 +529,7 @@ function App() {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://https://society-fund-transparency.onrender.com/api/expenses", {
+      const response = await fetch("https://society-fund-transparency.onrender.com/api/expenses", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -573,7 +573,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `http://https://society-fund-transparency.onrender.com/api/expenses/${editingExpenseId}`,
+        `https://society-fund-transparency.onrender.com/api/expenses/${editingExpenseId}`,
         {
           method: "PUT",
           headers: {
@@ -650,7 +650,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `http://https://society-fund-transparency.onrender.com/api/expenses/${expenseId}/${action}`,
+        `https://society-fund-transparency.onrender.com/api/expenses/${expenseId}/${action}`,
         {
           method: "PATCH",
           headers: {
@@ -702,7 +702,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `http://https://society-fund-transparency.onrender.com/api/expenses/${expenseId}`,
+        `https://society-fund-transparency.onrender.com/api/expenses/${expenseId}`,
         {
           method: "DELETE",
           headers: {
@@ -733,7 +733,7 @@ function App() {
     setInvitationCode("");
 
     try {
-      const response = await fetch("http://https://society-fund-transparency.onrender.com/api/invitations", {
+      const response = await fetch("https://society-fund-transparency.onrender.com/api/invitations", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -764,7 +764,7 @@ function App() {
 
     try {
       const response = await fetch(
-        "http://https://society-fund-transparency.onrender.com/api/societies/committee",
+        "https://society-fund-transparency.onrender.com/api/societies/committee",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -795,7 +795,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `http://https://society-fund-transparency.onrender.com/api/societies/committee/${memberId}`,
+        `https://society-fund-transparency.onrender.com/api/societies/committee/${memberId}`,
         {
           method: "DELETE",
           headers: {
@@ -829,7 +829,7 @@ function App() {
 
     try {
       const response = await fetch(
-        "http://https://society-fund-transparency.onrender.com/api/societies/committee",
+        "https://society-fund-transparency.onrender.com/api/societies/committee",
         {
           method: "POST",
           headers: {
