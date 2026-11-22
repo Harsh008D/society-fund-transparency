@@ -19,6 +19,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use(cors({
+    origin: "https://society-fund-transparency.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
 //Routes
 app.use("/api/societies", societyRoutes);
 app.use("/api/auth", authRoutes);
